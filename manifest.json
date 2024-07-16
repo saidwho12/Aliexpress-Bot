@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Aliexpress Coins",
-  "description": "Aliexpress Coins",
+  "name": "Aliexpress Bot",
+  "description": "Aliexpress Bot",
   "version": "1.0",
   "author": "Said Metiche",
   "action": {
