@@ -21312,31 +21312,87 @@ const {
  */
 connect, } = puppeteer;
 
-globalThis.testConnect = async url => {
-  const tab = await chrome.tabs.create({
-    url,
-  });
-
-  // Wait for the new tab to load before connecting.
-  await new Promise(resolve => {
-    function listener(tabId, changeInfo) {
-      if (tabId === tab.id && changeInfo.status === 'complete') {
-        chrome.tabs.onUpdated.removeListener(listener);
-        resolve();
-      }
-    }
-    chrome.tabs.onUpdated.addListener(listener);
-  });
-
-  const browser = await connect({
-    transport: await ExtensionTransport.connectTab(tab.id),
-  });
-  const [page] = await browser.pages();
-  const title = await page.evaluate(() => {
-    return document.title;
-  });
-  await browser.disconnect();
-  return title;
+const wrapAsyncFunction = (listener) => (request, sender, sendResponse) => {
+  // the listener(...) might return a non-promise result (not an async function), so we wrap it with Promise.resolve()
+  Promise.resolve(listener(request, sender)).then(sendResponse);
+  return true; // return true to indicate you want to send a response asynchronously
 };
+
+chrome.runtime.onMessage.addListener(
+  wrapAsyncFunction(async (request, sender) => {
+    if (request.command === 'daily-checkin') {
+      const url = 'https://www.aliexpress.com/p/coin-pc-index/index.html';
+      const tab = await chrome.tabs.create({
+        url,
+      });
+
+      // Wait for the new tab to load before connecting.
+      await new Promise(resolve => {
+        function listener(tabId, changeInfo) {
+          if (tabId === tab.id && changeInfo.status === 'complete') {
+            chrome.tabs.onUpdated.removeListener(listener);
+            resolve();
+          }
+        }
+        chrome.tabs.onUpdated.addListener(listener);
+      });
+      const browser = await connect({
+        transport: await ExtensionTransport.connectTab(tab.id),
+      });
+      const [page] = await browser.pages();
+      const [button] = await page.$$('xpath/.//*[@class="checkin-button"]');
+      console.log('collect btn:', button);
+      if (button) {// can collect
+        await button.click();
+      } else { // can't collect
+        console.log("can't collect, element is not available.");
+      }
+
+      await browser.disconnect();
+    }
+    else if (request.command === 'fetch-mycoin') {
+      const url = 'https://www.aliexpress.com/p/coin-pc-index/mycoin.html';
+      const tab = await chrome.tabs.create({
+        url,
+      });
+
+      // Wait for the new tab to load before connecting.
+      await new Promise(resolve => {
+        function listener(tabId, changeInfo) {
+          if (tabId === tab.id && changeInfo.status === 'complete') {
+            chrome.tabs.onUpdated.removeListener(listener);
+            resolve();
+          }
+        }
+        chrome.tabs.onUpdated.addListener(listener);
+      });
+      const browser = await connect({
+        transport: await ExtensionTransport.connectTab(tab.id),
+      });
+      const [page] = await browser.pages();
+      
+      const mycoin = await page.evaluate(() => {
+        const e1 = document.querySelector('.coin-info-content-head-text'); //coins
+        const e2 = document.querySelector('.coin-info-content-money-num'); //saves
+        return {coins: e1.innerHTML, saves: e2.innerHTML};
+      });
+
+      console.log("from worker", mycoin);
+
+      // Store coin info in permanent storage
+      chrome.storage.local.set({"mycoin": mycoin}, () => {
+          if (chrome.runtime.lastError)
+            console.log('Error setting');
+
+          console.log('Stored name: ' + mycoin);
+      });
+
+      await browser.disconnect();
+      return mycoin;
+    }
+
+    return null;
+  })
+);
 
 export { combineLatest as $, AsyncIterableUtil as A, HTTPRequest as B, CDPSessionEvent as C, Deferred as D, EventEmitter as E, handleError as F, isPlainObject as G, HTTPResponse as H, isRegExp as I, JSHandle as J, isDate as K, ProtocolError as L, TimeoutError as M, scriptInjector as N, getSourceUrlComment as O, PuppeteerURL as P, getSourcePuppeteerURLIfAvailable as Q, Realm as R, STATUS_TEXTS as S, TargetCloseError as T, UnsupportedOperation as U, isString as V, LazyArg as W, ARIAQueryHandler as X, SOURCE_URL_REGEX as Y, WebWorker as Z, of as _, filter as a, first as a0, raceWith as a1, timeout as a2, Accessibility as a3, ConsoleMessage as a4, defer as a5, isErrorLike as a6, firstValueFrom as a7, switchMap as a8, delayWhen as a9, Frame as aa, throwIfDetached as ab, Keyboard as ac, Mouse as ad, MouseButton as ae, Touchscreen as af, EmulationManager as ag, Tracing as ah, Coverage as ai, parsePDFOptions as aj, evaluationString as ak, Page as al, bubble as am, Target as an, TargetType as ao, WEB_PERMISSION_TO_PROTOCOL_PERMISSION as ap, BrowserContext as aq, Browser as ar, bufferCount as b, concatMap as c, debugError as d, takeUntil as e, fromEmitterEvent as f, fromEvent as g, guarded as h, asyncDisposeSymbol as i, from as j, CDPSession as k, lastValueFrom as l, map as m, CallbackRegistry as n, assert as o, debug as p, DisposableStack as q, disposeSymbol as r, inertIfDisposed as s, tap as t, throwIfDisposed as u, Dialog as v, ElementHandle as w, stringifyFunction as x, interpolateFunction as y, invokeAtMostOnceForArguments as z };

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Aliexpress Bot",
-  "description": "Aliexpress Bot",
+  "name": "AliExpress Bot",
+  "description": "AliExpress Bot",
   "version": "1.0",
   "author": "Said Metiche",
   "content_security_policy": {
@@ -12,7 +12,7 @@
     "service_worker": "./puppeteer-web/background.js",
     "type": "module"
   },
-  "permissions": ["debugger", "background"],
+  "permissions": ["debugger", "background", "nativeMessaging", "tabs", "storage"],
   "action": {
     "default_popup": "index.html",
     "default_icon": "800x800.png"
