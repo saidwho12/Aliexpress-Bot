@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Aliexpress Coins</title>
+    <script src="/tailwindcss/3.4.5/tailwindcss.js"></script>
+    <script>
+      tailwind.config = {
+        plugins: [
+          require('@tailwindcss/forms'),
+        ],
+      }
+    </script>
+    <style type="text/tailwindcss">
+      @tailwind base;
+      @tailwind components;
+      @tailwind utilities;
+
+      @layer utilities {
+        .content-auto {
+          content-visibility: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="w-80 h-96 p-8 gap-1 text-center">
+      <h1 class="text-xl font-bold text-zinc-900">My Coins</h1>
+      <div class="flex justify-center">
+        <img src="800x800.gif" width="64" height="64"/>
+      </div>
+      <div class="flex justify-center">
+        <p class="text-lg font-bold text-zinc-700" id="user-coins">345</p>
+        <hr class="mx-2"/>
+        <p class="text-lg font-bold text-amber-400" id="user-savings">C$4.82</p>
+      </div>
+      <div class="flex flex-col">
+        <table class="table-auto">
+          <tbody>
+            <tr>
+              <td>E-mail</td>
+              <td>
+                <input id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-amber-400 sm:text-sm sm:leading-6" />
+              </td>
+            </tr>
+            <tr>
+              <td>Password</td>
+              <td>
+                <input id="password" name="password" type="password" autocomplete="password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-amber-400 sm:text-sm sm:leading-6" />
+              </td>
+            </tr>
+          </tbody>
+        <table>
+        <button id="login-btn" type="button" class="mt-2 p-2 transition-all bg-amber-500 hover:bg-amber-400 shadow-lg text-md text-white font-bold rounded-md">Login</button>
+      </div>
+      <!-- <button type="button" class="p-4 bg-amber-400">Trigger</button> -->
+    </div>
+  </body>
+</html>
