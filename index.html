@@ -1,6 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aliexpress Bot</title>
     <script src="/tailwindcss/3.4.5/tailwindcss.js"></script>
     <script>
@@ -54,5 +56,20 @@
       </div>
       <!-- <button type="button" class="p-4 bg-amber-400">Trigger</button> -->
     </div>
+
+    <!-- Scripts -->
+    <!-- <script src="https://unpkg.com/puppeteer-web@0.0.2/lib/index.js"></script>
+    <script>
+      async function run(){
+        const browser = await puppeteer.connect({
+          browserWSEndpoint: `ws://0.0.0.0:8080`, // <-- connect to a server running somewhere
+          ignoreHTTPSErrors: true
+        });
+
+        const pagesCount = (await browser.pages()).length;
+        const browserWSEndpoint = await browser.wsEndpoint();
+        console.log({ browserWSEndpoint, pagesCount });
+      }
+    </script> -->
   </body>
 </html>
