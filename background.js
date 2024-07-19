@@ -13,7 +13,7 @@ const getRandomDelay = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const waitForTab = async (tab) => {
+const wait_for_tab = async (tab) => {
   await new Promise(resolve => {
     const listener = (tabId, changeInfo) => {
       if (tabId === tab.id && changeInfo.status === 'complete') {
@@ -43,9 +43,9 @@ const TIMEOUT_DURS = 1000; /*5*60*1000*/
 
 const DEFAULT_OPTIONS = {
   'user-coins': 0,
-  'max-retries': 10,
+  'max-retries': 24,
   'retry-count': 0,
-  'retry-delay': 30, // in minutes
+  'retry-delay': 60, // in minutes
   't-last-checkin-attempt': 0,
   't-last-successful-checkin': 0,
   'pc-streak-rate': 20,
@@ -62,14 +62,14 @@ const checkin = async () => {
   });
 
   // Wait for the new tab to load before connecting.
-  await waitForTab(tab);
+  await wait_for_tab(tab);
   const browser = await connect({
     transport: await ExtensionTransport.connectTab(tab.id)
   });
   const [page] = await browser.pages();
   const [button] = await page.$$('xpath/.//*[@class="checkin-button"]');
   console.log('collect btn:', button);
-  
+
   const now = Date.now(); // get unix timestamp
   if (button) {
     await button.click();
@@ -80,9 +80,7 @@ const checkin = async () => {
       'retry-count': 0, // reset attempts
       });
     const nowDate = new Date(now);
-    const date = nowDate.toLocaleDateString();
-    const time = nowDate.toLocaleTimeString();
-    console.log(`date: ${date}, time: ${time}`);
+    console.log(`date: ${nowDate.toLocaleDateString()}, time: ${nowDate.toLocaleTimeString()}`);
   } else {
     chrome.storage.sync.set({'t-last-checkin-attempt': now});
     chrome.storage.sync.get(['retry-count']).then((options) => {
@@ -107,26 +105,21 @@ const update_mycoins = async () => {
   const tab = await chrome.tabs.create({
     url: 'https://www.aliexpress.com/p/coin-pc-index/mycoin.html',
   });
-  await waitForTab(tab);
+  await wait_for_tab(tab);
 
   const browser = await connect({
     transport: await ExtensionTransport.connectTab(tab.id)
   });
 
   const [page] = await browser.pages();
-
   const coins = await page.$eval('xpath/.//*[@class="coin-info-content-head-text"]', el => el.innerText);
-
   console.log(coins);
 
   // Save coins into extension storage
-  const result = {'user-coins': coins};
-  chrome.storage.sync.set(result);
+  chrome.storage.sync.set({'user-coins': coins});
 
   await chrome.tabs.remove(tab.id);
   await browser.disconnect();
-
-  return result;
 };
 
 chrome.runtime.onMessage.addListener(
@@ -216,7 +209,7 @@ chrome.runtime.onMessage.addListener(
 
 const updateLoop = async () => {
   // get unix timestamp for last collection
-  const options = chrome.storage.sync.get(DEFAULT_OPTIONS);
+  const options = await chrome.storage.sync.get(DEFAULT_OPTIONS);
 
   const lastTime = options['t-last-successful-checkin'] ?? 0;
   const now = Date.now();
@@ -225,11 +218,14 @@ const updateLoop = async () => {
   console.log("Last time:", lastTime);
   console.log("Now time:", now);
   console.log("Elapsed time", elapsedTime);
-  if (now > lastTime + 24 * H2MS && (options['retry-count'] < options['max-retries'])) {
+  console.log("Retries ", options['retry-count']);
+  console.log("Max retries ", options['max-retries']);
+  if ((now > lastTime + 24 * H2MS) && (options['retry-count'] < options['max-retries'])) {
     // 24 hours elapsed since last successful collect & we haven't exhausted our tries
     const lastTry = options['t-last-checkin-attempt'] ?? 0;
-    const retrydelay = options['retry-delay'];
-    if (now > lastTry + retrydelay) {
+    const retrydelay = options['retry-delay'] * M2MS; // conver from mins to ms
+    console.log("Last try:", lastTry);
+    if (now > lastTry + retrydelay && lastTry>0) {
       await checkin();
       await update_mycoins();
     }

@@ -35,6 +35,7 @@ $('#force-checkin').click(async () => {
 
   $('#user-savings').text(savings);
   $('#pc-streak-rate').text(options['pc-streak-rate']);
+  $('#mobile-streak-rate').text(options['mobile-streak-rate']);
 
   const lastattempt = options['t-last-checkin-attempt'];
   const retrydelay = options['retry-delay'] * 60 * 1000; // convert to ms
@@ -48,8 +49,8 @@ $('#force-checkin').click(async () => {
   $('#retries-left').text(maxretries - retrycount);
   $('#prev-try-time').text(`${lastcheckin.toLocaleDateString()} ${lastcheckin.toLocaleTimeString()}`);
   
-  $('#max-retries').text(maxretries);
-  $('#retry-delay').text(options['retry-delay']);
+  $('#max-retries').val(maxretries);
+  $('#retry-delay').val(options['retry-delay']);
 })();
 
 // const H2MS = 60 * 60 * 1000;
