@@ -34,6 +34,28 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
   }
 });
 
+/////////////////// functions for setting default extension settings ////////////////////////////
+
+const H2MS = 60 * 60 * 1000;
+const M2MS = 60 * 1000;
+const WAIT_TIME_BEFORE_COLLECT = 20000;//24*H2MS;//H2MS * 12;
+const TIMEOUT_DURS = 1000; /*5*60*1000*/
+
+const DEFAULT_OPTIONS = {
+  'user-coins': 0,
+  'max-retries': 10,
+  'retry-count': 0,
+  'retry-delay': 30, // in minutes
+  't-last-checkin-attempt': 0,
+  't-last-successful-checkin': 0,
+  'pc-streak-rate': 20,
+  'mobile-streak-rate': 10
+};
+
+chrome.storage.sync.get(DEFAULT_OPTIONS, (options) => {
+  chrome.storage.sync.set(options);
+});
+
 const checkin = async () => {
   const tab = await chrome.tabs.create({
     url: 'https://www.aliexpress.com/p/coin-pc-index/index.html',
@@ -45,26 +67,43 @@ const checkin = async () => {
     transport: await ExtensionTransport.connectTab(tab.id)
   });
   const [page] = await browser.pages();
-  const button = await page.$('xpath/.//*[@class="checkin-button"]//*[contains(.,"Collect")]');
+  const [button] = await page.$$('xpath/.//*[@class="checkin-button"]');
   console.log('collect btn:', button);
+  
+  const now = Date.now(); // get unix timestamp
   if (button) {
     await button.click();
+    await page.waitForNetworkIdle(); // wait until coins are added server-side
+    chrome.storage.sync.set({
+      't-last-successful-checkin': now,
+      't-last-checkin-attempt': now,
+      'retry-count': 0, // reset attempts
+      });
+    const nowDate = new Date(now);
+    const date = nowDate.toLocaleDateString();
+    const time = nowDate.toLocaleTimeString();
+    console.log(`date: ${date}, time: ${time}`);
   } else {
+    chrome.storage.sync.set({'t-last-checkin-attempt': now});
+    chrome.storage.sync.get(['retry-count']).then((options) => {
+      const retries = options['retry-count'];
+      console.log(`retries: ${retries}`);
+      chrome.storage.sync.set({'retry-count': retries + 1});
+    });
     console.log("can't collect, element is not available.");
   }
 
-  const now = Date.now();
-  chrome.storage.sync.set({'last-collected-time': now}); // set unix timestamp
-  const nowDate = new Date(now);
-  const date = nowDate.toLocaleDateString();
-  const time = nowDate.toLocaleTimeString();
-  console.log('date:', date, ", time:", time);
+  // const nextDay = await page.waitForSelector('div.day-card.default.nextday');
+  const pcrate = await page.$eval('xpath/.//div[@class="addcoin"]', el => el.innerText);
+
+  console.log(`addcoin: ${pcrate}`);
+  chrome.storage.sync.set({'pc-streak-rate': parseInt(pcrate,10)});
 
   await chrome.tabs.remove(tab.id);
   await browser.disconnect();
 }
 
-const gather_coins_data = async () => {
+const update_mycoins = async () => {
   const tab = await chrome.tabs.create({
     url: 'https://www.aliexpress.com/p/coin-pc-index/mycoin.html',
   });
@@ -76,13 +115,12 @@ const gather_coins_data = async () => {
 
   const [page] = await browser.pages();
 
-  const coins = await page.$eval('xpath/.//*[@class="coin-info-content-head-text"]', el => el.innerHTML);
-  const savings = await page.$eval('xpath/.//*[@class="coin-info-content-money-num"]', el => el.innerHTML);
+  const coins = await page.$eval('xpath/.//*[@class="coin-info-content-head-text"]', el => el.innerText);
 
-  console.log(coins, savings);
+  console.log(coins);
 
-  // Save coins and savings into extension storage
-  const result = {'user-coins': coins, 'user-savings': savings};
+  // Save coins into extension storage
+  const result = {'user-coins': coins};
   chrome.storage.sync.set(result);
 
   await chrome.tabs.remove(tab.id);
@@ -94,7 +132,7 @@ const gather_coins_data = async () => {
 chrome.runtime.onMessage.addListener(
   wrapAsyncFunction(async (request, sender) => {
     if (request.command === 'request-data') {
-      const response = await chrome.storage.sync.get(['user-coins', 'user-savings']).then((result) => {
+      const response = await chrome.storage.sync.get(DEFAULT_OPTIONS).then((result) => {
         console.log('Value is:', result);
         return result;
       });
@@ -102,7 +140,7 @@ chrome.runtime.onMessage.addListener(
       return response;
     } else if (request.command === 'daily-checkin') {
       await checkin();
-      const response = await gather_coins_data();
+      const response = await update_mycoins();
       return response;
       // const [newPage] = browser.newPage();
       // Now that we collected the coins, we can save our coin information
@@ -175,3 +213,29 @@ chrome.runtime.onMessage.addListener(
     return null;
   })
 );
+
+const updateLoop = async () => {
+  // get unix timestamp for last collection
+  const options = chrome.storage.sync.get(DEFAULT_OPTIONS);
+
+  const lastTime = options['t-last-successful-checkin'] ?? 0;
+  const now = Date.now();
+
+  const elapsedTime = now - lastTime;
+  console.log("Last time:", lastTime);
+  console.log("Now time:", now);
+  console.log("Elapsed time", elapsedTime);
+  if (now > lastTime + 24 * H2MS && (options['retry-count'] < options['max-retries'])) {
+    // 24 hours elapsed since last successful collect & we haven't exhausted our tries
+    const lastTry = options['t-last-checkin-attempt'] ?? 0;
+    const retrydelay = options['retry-delay'];
+    if (now > lastTry + retrydelay) {
+      await checkin();
+      await update_mycoins();
+    }
+  }
+  
+  setTimeout(updateLoop, TIMEOUT_DURS);
+};
+
+updateLoop();

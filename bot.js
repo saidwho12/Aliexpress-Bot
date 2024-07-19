@@ -8,7 +8,6 @@ $('#login-btn').click(async () => {
   console.log(response);
 });
 
-
 $('#force-checkin').click(async () => {
   const response = await chrome.runtime.sendMessage({
     command: 'daily-checkin',
@@ -17,50 +16,65 @@ $('#force-checkin').click(async () => {
 
 
 (async () => {
-  const response = await chrome.runtime.sendMessage({
+  const options = await chrome.runtime.sendMessage({
     command: 'request-data',
   });
-  console.log('Client:', response);
+  console.log('Client:', options);
 
-  $('#user-coins').text(response['user-coins']);
-  $('#user-savings').text(response['user-savings']);
-})();
+  const coins = parseInt(options['user-coins'], 10);
+  $('#user-coins').text(coins);
 
-const H2MS = 60 * 60 * 1000;
-
-function updateLoop () {
-  // get unix timestamp for last collection
-  chrome.storage.sync.get(['last-collected-time']).then((result) => {
-    const lastTime = result['last-collected-time'];
-    if (lastTime !== undefined) {
-      const now = Date.now();
-      const elapsedTime = now - lastTime;
-      console.log("Last time:", lastTime);
-      console.log("Now time:", now);
-      console.log("Elapsed time", elapsedTime);
-      if (elapsedTime >= H2MS * 12) {// 12 hours
-        (async () => {
-          const response = await chrome.runtime.sendMessage({
-          command: 'daily-checkin',
-          });
-        })();
-      }
-    }
+  // Create our number formatter.
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
   });
 
-  setTimeout(updateLoop, 5*60*1000); // 5mins
-};
+  const savings = formatter.format(coins / 100.0);
+  console.log(savings);
 
-updateLoop();
+  $('#user-savings').text(savings);
+  $('#pc-streak-rate').text(options['pc-streak-rate']);
 
-// setInterval(() => {
-//   chrome.storage.sync.get(['last-collected-time']).then((result) => {
-//     console.log("Value is " + result['last-collected-time']);
-//   });
+  const lastattempt = options['t-last-checkin-attempt'];
+  const retrydelay = options['retry-delay'] * 60 * 1000; // convert to ms
+  const future = new Date(lastattempt + retrydelay);
+
+  $('#next-try-time').text(`${future.toLocaleDateString()} ${future.toLocaleTimeString()}`);
+
+  const maxretries = options['max-retries'];
+  const retrycount = options['retry-count'];
+  const lastcheckin = new Date(options['t-last-checkin-attempt']);
+  $('#retries-left').text(maxretries - retrycount);
+  $('#prev-try-time').text(`${lastcheckin.toLocaleDateString()} ${lastcheckin.toLocaleTimeString()}`);
   
-// }, 5 * 60 * 1000);
+  $('#max-retries').text(maxretries);
+  $('#retry-delay').text(options['retry-delay']);
+})();
 
-// set initial values for coins and savings
-// chrome.storage.sync.get(['user-coins', 'user-savings']).then((result) => {
-//   console.log("Value is " + result['user-coins']);
-// });
+// const H2MS = 60 * 60 * 1000;
+
+// function updateLoop () {
+//   // get unix timestamp for last collection
+//   chrome.storage.local.get(['last-collected-time']).then((result) => {
+//     const lastTime = result['last-collected-time'];
+//     if (lastTime !== undefined) {
+//       const now = Date.now();
+//       const elapsedTime = now - lastTime;
+//       console.log("Last time:", lastTime);
+//       console.log("Now time:", now);
+//       console.log("Elapsed time", elapsedTime);
+//       if (elapsedTime >= H2MS * 12) {// 12 hours
+//         (async () => {
+//           const response = await chrome.runtime.sendMessage({
+//           command: 'daily-checkin',
+//           });
+//         })();
+//       }
+//     }
+//   });
+
+//   setTimeout(updateLoop, 5*60*1000); // 5mins
+// };
+
+// updateLoop();
