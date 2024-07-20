@@ -9,7 +9,7 @@
     "sandbox": "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';"
   },
   "background": {
-    "service_worker": "./static/puppeteer-web/background.js",
+    "service_worker": "./puppeteer-web/background.js",
     "type": "module"
   },
   "permissions": [
@@ -28,6 +28,6 @@
   ],
   "action": {
     "default_popup": "index.html",
-    "default_icon": "./static/img/icon-128x128.png"
+    "default_icon": "icon-128x128.png"
   }
 }

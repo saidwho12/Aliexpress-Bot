@@ -1,2 +1,4 @@
 /node_modules
 /puppeteer-extra
+/build
+*.zip

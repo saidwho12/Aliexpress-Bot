@@ -67,6 +67,7 @@ const checkin = async () => {
     transport: await ExtensionTransport.connectTab(tab.id)
   });
   const [page] = await browser.pages();
+  await page.waitForNetworkIdle();
   const [button] = await page.$$('xpath/.//*[@class="checkin-button"]');
   console.log('collect btn:', button);
 
@@ -215,16 +216,16 @@ const updateLoop = async () => {
   const now = Date.now();
 
   const elapsedTime = now - lastTime;
-  console.log("Last time:", lastTime);
-  console.log("Now time:", now);
-  console.log("Elapsed time", elapsedTime);
-  console.log("Retries ", options['retry-count']);
-  console.log("Max retries ", options['max-retries']);
+  // console.log("Last time:", lastTime);
+  // console.log("Now time:", now);
+  // console.log("Elapsed time", elapsedTime);
+  // console.log("Retries ", options['retry-count']);
+  // console.log("Max retries ", options['max-retries']);
   if ((now > lastTime + 24 * H2MS) && (options['retry-count'] < options['max-retries'])) {
     // 24 hours elapsed since last successful collect & we haven't exhausted our tries
     const lastTry = options['t-last-checkin-attempt'] ?? 0;
     const retrydelay = options['retry-delay'] * M2MS; // conver from mins to ms
-    console.log("Last try:", lastTry);
+    // console.log("Last try:", lastTry);
     if (now > lastTry + retrydelay && lastTry>0) {
       await checkin();
       await update_mycoins();

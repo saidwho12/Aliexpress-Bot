@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="initial-scale=1.0" />
     <title>AliExpress Bot</title>
-    <link rel="manifest" href="/manifest.json">
-    <link href="./flowbite.min.css" rel="stylesheet" />
-    <link href="./css/tw-elements.min.css" rel="stylesheet" />
+    <link rel="manifest" href="./manifest.json">
+    <link href="./static/css/flowbite.min.css" rel="stylesheet" />
+    <link href="./static/css/tw-elements.min.css" rel="stylesheet" />
     <style type="text/tailwindcss">
       @tailwind base;
       @tailwind components;
@@ -74,7 +74,7 @@
       </li>
     </ul>
 
-    <div class="mx-4 mb-4 gap-1 drop-shadow-md text-center">
+    <div class="mx-4 mb-4 gap-1 text-center">
       <!--Tabs content-->
       <div
         class="hidden opacity-100 transition-opacity duration-150 ease-linear data-[twe-tab-active]:block"
@@ -86,7 +86,7 @@
         <div class="flex mb-3 items-center">
           <div class="flex-grow basis-0 text-center">
             <!-- <p class="mb-1 text-gray-900 text-sm font-medium">Coins</p> -->
-            <div class="flex justify-center"><img src="800x800.gif" width="52" height="52"/></div>
+            <div class="flex justify-center"><img src="./static/img/icon-animated-128x128.gif" width="52" height="52"/></div>
             <p class="text-md font-medium">
             <span class="text-gray-700" id="user-coins"></span>
             (<span data-tooltip-target="savings-tooltip" class="text-amber-400 hover:underline" id="user-savings"></span>)
@@ -205,11 +205,11 @@
         </div>
       </div>
     </div>
-    <script src="./jquery-3.7.1.min.js"></script>
-    <script src="./tailwindcss/3.4.5/tailwindcss.js"></script>
-    <script src="./flowbite.min.js"></script>
-    <script src="./js/tw-elements.umd.min.js"></script>
-    <script src="./bot.js"></script>
+    <script src="./static/js/jquery-3.7.1.min.js"></script>
+    <script src="./static/js/tailwind.js"></script>
+    <script src="./static/js/flowbite.min.js"></script>
+    <script src="./static/js/tw-elements.umd.min.js"></script>
+    <script src="./static/js/bot.js"></script>
 <!--     <script>
       tailwind.config = {
         plugins: [

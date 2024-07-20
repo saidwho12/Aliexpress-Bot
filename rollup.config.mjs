@@ -9,7 +9,7 @@ export default {
   input: 'background.js',
   output: {
     format: 'esm',
-    dir: 'puppeteer-web',
+    dir: './static/puppeteer-web',
   },
   plugins: [
     nodeResolve({
