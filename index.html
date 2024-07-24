@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="dark:bg-neutral-800">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="initial-scale=1.0" />
@@ -19,16 +19,16 @@
       }
     </style>
   </head>
-  <body class="w-[300px]">
+  <body class="w-[320px]">
     <!--Tabs navigation-->
     <ul
-      class="mb-2 flex list-none flex-row-reverse flex-wrap border border-b-1 border-gray-200 shadow-sm ps-0"
+      class="mb-2 flex list-none flex-row-reverse flex-wrap border-b border-gray-200 border-solid dark:border-neutral-700 shadow-sm ps-0"
       role="tablist"
       data-twe-nav-ref>
       <li class="text-center" role="presentation">
         <a
           href="#tabs-profile"
-          class="inline-flex border-x-0 border-b-2 border-t-0 border-transparent px-4 pb-2.5 pt-3 text-xs font-medium leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[twe-nav-active]:border-amber-400 data-[twe-nav-active]:text-amber-500"
+          class="inline-flex border-x-0 border-b-2 border-t-0 border-transparent px-4 pb-2.5 pt-3 text-xs font-medium leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[twe-nav-active]:border-amber-400 data-[twe-nav-active]:text-amber-500 dark:hover:bg-neutral-800"
           data-twe-toggle="pill"
           data-twe-target="#tabs-profile"
           role="tab"
@@ -43,7 +43,7 @@
       <li class="text-center" role="presentation">
         <a
           href="#tabs-profile"
-          class="inline-flex border-x-0 border-b-2 border-t-0 border-transparent px-4 pb-2.5 pt-3 text-xs font-medium leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[twe-nav-active]:border-amber-400 data-[twe-nav-active]:text-amber-500"
+          class="inline-flex border-x-0 border-b-2 border-t-0 border-transparent px-4 pb-2.5 pt-3 text-xs font-medium leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[twe-nav-active]:border-amber-400 data-[twe-nav-active]:text-amber-500 dark:hover:bg-neutral-800"
           data-twe-toggle="pill"
           data-twe-target="#tabs-profile"
           role="tab"
@@ -58,7 +58,7 @@
       <li class="text-center" role="presentation">
         <a
           href="#tabs-home"
-          class="inline-flex border-x-0 border-b-2 border-t-0 border-transparent px-4 pb-2.5 pt-3 text-xs font-medium leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[twe-nav-active]:border-amber-400 data-[twe-nav-active]:text-amber-500"
+          class="inline-flex border-x-0 border-b-2 border-t-0 border-transparent px-4 pb-2.5 pt-3 text-xs font-medium leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[twe-nav-active]:border-amber-400 data-[twe-nav-active]:text-amber-500 dark:hover:bg-neutral-800"
           data-twe-toggle="pill"
           data-twe-target="#tabs-home"
           data-twe-nav-active
@@ -83,40 +83,97 @@
         aria-labelledby="tabs-home-tab"
         data-twe-tab-active>
         <!-- <hr class="h-px my-3 bg-gray-200 border-0"> -->
-        <div class="flex mb-3 items-center">
-          <div class="flex-grow basis-0 text-center">
-            <!-- <p class="mb-1 text-gray-900 text-sm font-medium">Coins</p> -->
-            <div class="flex justify-center"><img src="./static/img/icon-animated-128x128.gif" width="52" height="52"/></div>
-            <p class="text-md font-medium">
-            <span class="text-gray-700" id="user-coins"></span>
-            (<span data-tooltip-target="savings-tooltip" class="text-amber-400 hover:underline" id="user-savings"></span>)
-            <div id="savings-tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
-              Savings is in USD
-              <div class="tooltip-arrow" data-popper-arrow></div>
-            </div>
-          </div>
-          <div class="flex-grow basis-0 text-center">
-            <p class="mb-1 text-gray-900 text-xs font-medium">PC streak</p>
-            <p class="align-baseline text-md font-medium text-gray-900"><span id="pc-streak-rate" class="before:content-['+'] after:content-['¢'] text-amber-400">20</span><sub class="align-sub italic">/24h</sub></p>
-          </div>
-          <div class="flex-grow basis-0 text-center">
-            <p class="mb-1 text-gray-900 text-xs font-medium">Mobile streak</p>
-            <p class="align-baseline text-md font-medium text-gray-900"><span id="mobile-streak-rate" class="before:content-['+'] after:content-['¢'] text-amber-400">20</span><sub class="align-sub italic">/24h</sub></p>
+        <div class="text-center mb-4">
+          <!-- <p class="mb-1 text-gray-900 text-sm font-medium">Coins</p> -->
+          <div class="flex justify-center"><img src="./static/img/icon-animated-128x128.gif" width="64" height="64"/></div>
+          <p class="text-lg font-medium text-neutral-700 dark:text-neutral-200">
+          <span id="user-coins"></span>
+          (<span data-tooltip-target="savings-tooltip" class="text-amber-400 hover:underline" id="user-savings"></span>)
+          <div id="savings-tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white transition-opacity duration-300 bg-neutral-950 rounded-lg shadow-sm opacity-0 tooltip">
+            Uses money.js to determine exchange rate.
+            <div class="tooltip-arrow" data-popper-arrow></div>
           </div>
         </div>
-        <hr class="h-px my-3 bg-gray-200 border-0">
-        <div class="flex flex-col mb-2">
-          <div class="mb-2">
-            <label for="max-retries" class="block mb-2 text-xs font-medium text-gray-900">Max Retries</label>
+        <div class="relative overflow-x-auto sm:rounded-lg rounded-md bg-neutral-800">
+          <table class="w-full text-xs text-left rtl:text-right text-neutral-500 dark:text-neutral-400">
+            <thead class="text-xs">
+              <tr>
+                <th scope="col" class="px-3 py-1.5 bg-neutral-50 dark:bg-neutral-900">
+                  <div class="flex justify-center">
+                    <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-amber-600 bg-neutral-100 border-neutral-300 rounded focus:ring-amber-500 dark:focus:amber-blue-600 dark:ring-offset-neutral-800 focus:ring-2 dark:bg-neutral-700 dark:border-neutral-600">
+                  </div>
+                </th>
+                <th scope="col" class="px-3 py-1.5 bg-neutral-50 dark:bg-neutral-800">
+                  Origin
+                </th>
+                <th scope="col" class="px-3 py-1.5 bg-neutral-50 dark:bg-neutral-900">
+                  Daily coins
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-neutral-200 dark:border-neutral-600">
+                <th scope="row" class="px-3 py-1.5 font-medium text-neutral-900 whitespace-nowrap bg-neutral-50 dark:text-white dark:bg-neutral-900">
+                  <div class="flex justify-center">
+                    <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-amber-600 bg-neutral-100 border-neutral-300 rounded focus:ring-amber-500 dark:focus:amber-blue-600 dark:ring-offset-neutral-800 focus:ring-2 dark:bg-neutral-700 dark:border-neutral-600">
+                  </div>
+                </th>
+                <td class="px-3 py-1.5 font-medium bg-neutral-50 dark:bg-neutral-800 dark:text-neutral-300">
+                  PC
+                </td>
+                <td class="px-3 py-1.5 bg-neutral-50 dark:bg-neutral-900 font-medium">
+                  <span id="pc-streak-rate" class="before:content-['+']"></span> (<span id="pc-streak-rate-money" class="before:content-['+'] text-neutral-200"></span>)
+                </td>
+              </tr>
+              <tr class="border-b border-neutral-200 dark:border-neutral-600">
+                <th scope="row" class="px-3 py-1.5 font-medium text-neutral-900 whitespace-nowrap bg-neutral-50 dark:text-white dark:bg-neutral-900">
+                  <div class="flex justify-center">
+                    <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-amber-600 bg-neutral-100 border-neutral-300 rounded focus:ring-amber-500 dark:focus:amber-blue-600 dark:ring-offset-neutral-800 focus:ring-2 dark:bg-neutral-700 dark:border-neutral-600">
+                  </div>
+                </th>
+                <td class="px-3 py-1.5 font-medium bg-neutral-50 dark:bg-neutral-800 dark:text-neutral-300">
+                  Mobile
+                </td>
+                <td class="px-3 py-1.5 bg-neutral-50 dark:bg-neutral-900 font-medium">
+                  <span id="mobile-streak-rate" class="before:content-['+']"></span> (<span id="mobile-streak-rate-money" class="before:content-['+'] text-neutral-200"></span>)
+                </td>
+              </tr>
+              <tr>
+                <th scope="row" class="px-2 py-1.5 text-neutral-900 whitespace-nowrap bg-neutral-50 dark:text-white dark:bg-neutral-900">
+                </th>
+                <td class="px-3 py-1.5 font-medium bg-neutral-50 dark:bg-neutral-800 dark:text-neutral-300">
+                  Total
+                </td>
+                <td class="px-3 py-1.5 bg-neutral-50 dark:bg-neutral-900 font-medium">
+                  <span id="total-streak-rate" class="before:content-['+']"></span> (<span id="total-streak-rate-money" class="before:content-['+'] text-neutral-200"></span>)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr class="h-px my-3 bg-neutral-200 dark:bg-neutral-700 border-0">
+        <div class="flex flex-col">
+          <div class="mx-auto w-full mb-2">
+            <label for="currency" class="block mb-2 text-xs font-medium text-neutral-900 dark:text-neutral-100">Currency:</label>
+            <select id="currency" class="bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-amber-500 focus:border-amber-500 block w-full px-2.5 py-1.5 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-amber-500 dark:focus:border-amber-500">
+            </select>
+          </div>
+          <div class="flex items-center mb-2">
+            <input checked id="checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-amber-600 bg-neutral-100 border-neutral-300 rounded focus:ring-amber-500 dark:focus:amber-blue-600 dark:ring-offset-neutral-800 focus:ring-2 dark:bg-neutral-700 dark:border-neutral-600">
+            <label for="checked-checkbox" class="ms-2 text-sm font-medium text-neutral-900 dark:text-neutral-300">Pull from Account</label>
+          </div>
+
+          <!-- <div class="mb-2">
+            <label for="max-retries" class="block mb-2 text-xs font-medium text-neutral-900 dark:text-neutral-200">Max Retries</label>
             <div class="relative flex items-center mb-2">
-              <button type="button" id="decrement-button" data-input-counter-decrement="max-retries" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-8 focus:ring-gray-100 focus:ring-2 focus:outline-none">
-                  <svg class="w-2 h-2 text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+              <button type="button" id="decrement-button" data-input-counter-decrement="max-retries" class="bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-600 dark:hover:bg-neutral-500 border border-neutral-300 dark:border-neutral-600 rounded-s-lg p-3 h-8 focus:ring-amber-500 focus:ring-2 focus:outline-none">
+                  <svg class="w-2 h-2 text-neutral-900 dark:text-neutral-100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                   </svg>
               </button>
-              <input type="text" id="max-retries" data-input-counter aria-describedby="helper-text-explanation" class="bg-gray-50 border-x-0 border-gray-300 h-8 text-center text-gray-900 text-xs focus:ring-blue-500 focus:border-blue-500 block w-full py-1" placeholder="999" value="10" required />
-              <button type="button" id="increment-button" data-input-counter-increment="max-retries" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-8 focus:ring-gray-100 focus:ring-2 focus:outline-none">
-                  <svg class="w-2 h-2 text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+              <input type="text" id="max-retries" data-input-counter aria-describedby="helper-text-explanation" class="bg-neutral-50 border-x-0 border-neutral-300 h-8 text-center text-neutral-900 text-xs focus:ring-amber-500 focus:border-amber-500 block w-full py-1 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100" placeholder="999" value="10" required />
+              <button type="button" id="increment-button" data-input-counter-increment="max-retries" class="bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-600 dark:hover:bg-neutral-500 border border-neutral-300 dark:border-neutral-600 rounded-e-lg p-3 h-8 focus:ring-amber-500 focus:ring-2 focus:outline-none">
+                  <svg class="w-2 h-2 text-neutral-900 dark:text-neutral-100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
                   </svg>
               </button>
@@ -124,23 +181,23 @@
           </div>
 
           <div class="mb-2">
-            <label for="retry-delay" class="block mb-2 text-xs font-medium text-gray-900">Retry Delay (in Mins)</label>
+            <label for="retry-delay" class="block mb-2 text-xs font-medium text-neutral-900 dark:text-neutral-200">Retry Delay (in Minutes)</label>
             <div class="relative flex items-center mb-2">
-              <button type="button" id="decrement-button" data-input-counter-decrement="retry-delay" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-8 focus:ring-gray-100 focus:ring-2 focus:outline-none">
-                  <svg class="w-2 h-2 text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+              <button type="button" id="decrement-button" data-input-counter-decrement="retry-delay" class="bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-600 dark:hover:bg-neutral-500 border border-neutral-300 dark:border-neutral-600 rounded-s-lg p-3 h-8 focus:ring-amber-500 focus:ring-2 focus:outline-none">
+                  <svg class="w-2 h-2 text-neutral-900 dark:text-neutral-100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                   </svg>
               </button>
-              <input type="text" id="retry-delay" data-input-counter aria-describedby="helper-text-explanation" class="bg-gray-50 border-x-0 border-gray-300 h-8 text-center text-gray-900 text-xs focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5" placeholder="999" value="30" required />
-              <button type="button" id="increment-button" data-input-counter-increment="retry-delay" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-8 focus:ring-gray-100 focus:ring-2 focus:outline-none">
-                  <svg class="w-2 h-2 text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+              <input type="text" id="retry-delay" data-input-counter aria-describedby="helper-text-explanation" class="bg-neutral-50 border-x-0 border-neutral-300 h-8 text-center text-neutral-900 text-xs focus:ring-amber-500 focus:border-amber-500 block w-full py-1 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100" placeholder="999" value="30" required />
+              <button type="button" id="increment-button" data-input-counter-increment="retry-delay" class="bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-600 dark:hover:bg-neutral-500 border border-neutral-300 dark:border-neutral-600 rounded-e-lg p-3 h-8 focus:ring-amber-500 focus:ring-2 focus:outline-none">
+                  <svg class="w-2 h-2 text-neutral-900 dark:text-neutral-100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
                   </svg>
               </button>
-            </div>
-          </div>
+            </div> 
+          </div>-->
 
-          <p class="mb-2 font-medium text-xs text-gray-900">
+          <!-- <p class="mb-2 font-medium text-xs text-gray-900">
             Retries: <span id="retries-left"></span>
           </p>
 
@@ -150,33 +207,27 @@
 
           <p class="mb-2 font-medium text-xs text-gray-900">
             Next Try: <span id="next-try-time"></span>
-          </p>
+          </p> -->
 
-          <hr class="h-px my-3 bg-gray-200 border-0">
+          <hr class="h-px my-3 bg-neutral-200 dark:bg-neutral-700 border-0">
           <div class="flex gap-2 mb-2">
             <button
               type="button"
-              id="force-checkin"
+              id="checkin-pc"
               data-twe-ripple-init
               data-twe-ripple-color="light"
-              class="flex-grow basis-0 inline-block rounded bg-amber-500 px-7 py-2 text-xs font-medium leading-normal text-white shadow-amber-400 transition duration-150 ease-in-out hover:bg-amber-400 hover:shadow-amber-200 focus:bg-amber-400 focus:shadow-amber-200 focus:outline-none focus:ring-0 active:bg-amber-600 active:shadow-amber-2">
-              Checkin
+              class="flex-grow basis-0 inline-block rounded bg-amber-500 px-7 py-2 text-xs font-medium leading-normal text-white shadow-amber-400 transition duration-150 ease-in-out hover:bg-amber-400 hover:shadow-amber-200 focus:bg-amber-400 focus:shadow-amber-200 focus:outline-none focus:ring-0 active:bg-amber-600 active:shadow-amber-2 dark:bg-amber-600 dark:hover:bg-amber-500 dark:hover:shadow-amber-400 dark:focus:bg-amber-500">
+              Force Checkin
             </button>
-            <button
+            <!-- <button
               type="button"
-              id="reset-tries"
+              id="checkin-mobile"
               data-twe-ripple-init
               data-twe-ripple-color="light"
-              class="flex-grow basis-0 inline-block rounded bg-amber-500 px-7 py-2 text-xs font-medium leading-normal text-white shadow-amber-400 transition duration-150 ease-in-out hover:bg-amber-400 hover:shadow-amber-200 focus:bg-amber-400 focus:shadow-amber-200 focus:outline-none focus:ring-0 active:bg-amber-600 active:shadow-amber-2">
-              Reset Tries
-            </button>
+              class="flex-grow basis-0 inline-block rounded bg-amber-500 px-7 py-2 text-xs font-medium leading-normal text-white shadow-amber-400 transition duration-150 ease-in-out hover:bg-amber-400 hover:shadow-amber-200 focus:bg-amber-400 focus:shadow-amber-200 focus:outline-none focus:ring-0 active:bg-amber-600 active:shadow-amber-2 dark:bg-amber-600 dark:hover:bg-amber-500 dark:hover:shadow-amber-400 dark:focus:bg-amber-500">
+              Checkin Mobile
+            </button> -->
           </div>
-
-          <label class="mb-4 inline-flex items-center cursor-pointer">
-            <input type="checkbox" value="" class="sr-only peer">
-            <div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-amber-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-500 peer-checked:bg-amber-400"></div>
-            <span class="ms-3 text-sm font-medium text-gray-900">Auto Collect</span>
-          </label>
         </div>
       </div>
       <div
@@ -209,6 +260,7 @@
     <script src="./static/js/tailwind.js"></script>
     <script src="./static/js/flowbite.min.js"></script>
     <script src="./static/js/tw-elements.umd.min.js"></script>
+    <script src="./static/js/money.min.js"></script>
     <script src="./static/js/bot.js"></script>
 <!--     <script>
       tailwind.config = {

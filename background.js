@@ -34,7 +34,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
   }
 });
 
-/////////////////// functions for setting default extension settings ////////////////////////////
+////////////////////// functions for setting default extension settings ////////////////////////////
 
 const H2MS = 60 * 60 * 1000;
 const M2MS = 60 * 1000;
@@ -49,12 +49,75 @@ const DEFAULT_OPTIONS = {
   't-last-checkin-attempt': 0,
   't-last-successful-checkin': 0,
   'pc-streak-rate': 20,
-  'mobile-streak-rate': 10
+  'mobile-streak-rate': 10,
+  'currency': 'USD'
 };
 
 chrome.storage.sync.get(DEFAULT_OPTIONS, (options) => {
   chrome.storage.sync.set(options);
 });
+
+const checkin_mobile = async () => {
+  const tab = await chrome.tabs.create({
+    url: 'about:blank',
+  });
+
+  await wait_for_tab(tab);
+  const browser = await connect({
+    transport: await ExtensionTransport.connectTab(tab.id)
+  });
+  const [page] = await browser.pages();
+
+  await page.emulate({
+    userAgent: 'Mozilla/5.0 (Linux; Android 13; Pixel 7 Build/TD1A.220804.009.A2; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/103.0.5060.71 Mobile Safari/537.36', // Webview
+    viewport: {
+      isMobile: true,
+      hasTouch: true,
+      deviceScaleFactor: 1,
+      width: 1080,
+      height: 2400,
+    }
+  });
+
+  await page.goto('https://m.aliexpress.com/p/coin-index/index.html?_immersiveMode=true&from=myaeicon', {
+    timeout: 1, // as this always times out, we set the timeout number as a wait
+  }).catch((error) => {
+    /* no-op */
+  });
+
+  const button = await page.waitForSelector('xpath/.//div[contains(@class, "doubleSignVersion-panel-button")]');
+  console.log(button);
+  if (button) {
+    const oldText = await page.evaluate(button => button.textContent, button);
+    await button.tap();
+    const newText = await page.evaluate(button => button.textContent, button);
+    console.log(`button text => old: ${oldText}, new: ${newText}`);
+    if (oldText != newText) {
+      console.log('Claim successful!');
+      // tap again for more tasks
+      await button.tap();
+    }
+
+    const tasks = await page.$$('xpath/.//div[@class="TaskItem"]/div[@class="status"]/a');
+    console.log(tasks);
+
+    if (tasks.length >= 1) {
+      await tasks[0].tap();
+    }
+
+    await button.tap(); // close tasks
+  }
+
+  // update streak value
+  const mrate = await page.$eval('xpath/.//div[contains(@class,"today")]/*/div[@class="reward"]', el => el.innerText);
+  console.log(`mobile rate: ${mrate}`);
+  chrome.storage.sync.set({
+    'mobile-streak-rate': Number(mrate)
+  });
+
+  await chrome.tabs.remove(tab.id);
+  await browser.disconnect();
+}
 
 const checkin = async () => {
   const tab = await chrome.tabs.create({
@@ -132,7 +195,10 @@ chrome.runtime.onMessage.addListener(
       });
 
       return response;
+    } else if (request.command === 'update-data') {
+      await chrome.storage.sync.set(request.options);
     } else if (request.command === 'daily-checkin') {
+      await checkin_mobile();
       await checkin();
       const response = await update_mycoins();
       return response;
@@ -147,6 +213,9 @@ chrome.runtime.onMessage.addListener(
       // await page.waitForNavigation({
       //   waitUntil: 'networkidle0',
       // });
+    }
+    else if (request.command == 'daily-checkin-mobile') {
+      await checkin_mobile();
     }
     else if (request.command === 'fetch-mycoin') {
       const response = await fetch('https://www.aliexpress.com/p/coin-pc-index/mycoin.html', {
@@ -224,9 +293,10 @@ const updateLoop = async () => {
   if ((now > lastTime + 24 * H2MS) && (options['retry-count'] < options['max-retries'])) {
     // 24 hours elapsed since last successful collect & we haven't exhausted our tries
     const lastTry = options['t-last-checkin-attempt'] ?? 0;
-    const retrydelay = options['retry-delay'] * M2MS; // conver from mins to ms
+    const retrydelay = options['retry-delay'] * M2MS; // convert from mins to ms
     // console.log("Last try:", lastTry);
     if (now > lastTry + retrydelay && lastTry>0) {
+      await checkin_mobile();
       await checkin();
       await update_mycoins();
     }

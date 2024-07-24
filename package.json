@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rollup -c && cp manifest.json puppeteer-web/"
+    "build": "rollup -c"
   },
   "keywords": [],
   "author": "",
